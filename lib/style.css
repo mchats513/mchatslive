@@ -89,6 +89,11 @@
     align-items: center;
     justify-content: center;
 }
+ @media screen and (max-width:1270px) {
+    body {box-sizing: border-box;
+       
+     }
+   }
 
 .bgcover {
     width: 100%;
