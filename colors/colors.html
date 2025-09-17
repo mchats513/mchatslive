@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hex Color Extractor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #654321 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #8B4513;
+      font-size: 2.5em;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-family: 'Courier New', monospace;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background: #fafbfc;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #8B4513;
+      box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+    }
+
+    .button-container {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    button {
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(139, 69, 19, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #color-container {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .color-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 15px;
+      background: white;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-box:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      border-color: #8B4513;
+    }
+
+    .color-box:active {
+      transform: translateY(-2px) scale(0.98);
+    }
+
+    .swatch {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .color-box:hover .swatch {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .hex-code {
+      color: #8B4513;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+
+    .copy-hint {
+      font-size: 10px;
+      color: #7f8c8d;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-weight: normal;
+    }
+
+    .color-box:hover .copy-hint {
+      opacity: 1;
+    }
+
+    .copied-feedback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(46, 204, 113, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .copied-feedback.show {
+      opacity: 1;
+    }
+
+    .no-colors {
+      text-align: center;
+      color: #7f8c8d;
+      font-style: italic;
+      padding: 40px;
+      font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      h2 {
+        font-size: 2em;
+      }
+
+      #color-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+      }
+
+      .color-box {
+        padding: 15px 10px;
+      }
+
+      .swatch {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🎨 Hex Color Extractor</h2>
+  <textarea id="input" placeholder="Paste your text with hex codes here... (e.g., #FF5733, #3498DB, #2ECC71)"></textarea>
+  
+  <div class="button-container">
+    <button onclick="extractColors()">Extract Colors</button>
+  </div>
+
+  <div id="color-container"></div>
+</div>
+
+<script>
+  function extractColors() {
+    const text = document.getElementById('input').value;
+    const regex = /#(?:[0-9a-fA-F]{3}){1,2}\b/g;
+    const matches = [...new Set(text.match(regex))]; // unique matches
+
+    const container = document.getElementById('color-container');
+    container.innerHTML = '';
+
+    if (matches && matches.length > 0) {
+      matches.forEach(hex => {
+        const box = document.createElement('div');
+        box.className = 'color-box';
+        box.onclick = () => copyToClipboard(hex, box);
+        box.innerHTML = `
+          <div class="swatch" style="background-color: ${hex};"></div>
+          <div class="hex-code">${hex}</div>
+          <div class="copy-hint">Click to copy</div>
+          <div class="copied-feedback">Copied!</div>
+        `;
+        container.appendChild(box);
+      });
+    } else {
+      container.innerHTML = '<div class="no-colors">No hex colors found. Try pasting text with hex codes like #FF5733</div>';
+    }
+  }
+
+  async function copyToClipboard(text, element) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showCopiedFeedback(element);
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      showCopiedFeedback(element);
+    }
+  }
+
+  function showCopiedFeedback(element) {
+    const feedback = element.querySelector('.copied-feedback');
+    feedback.classList.add('show');
+    setTimeout(() => {
+      feedback.classList.remove('show');
+    }, 1000);
+  }
+
+  // Auto-extract on paste
+  document.getElementById('input').addEventListener('paste', () => {
+    setTimeout(extractColors, 100);
+  });
+</script>
+
+</body>
+</html>
