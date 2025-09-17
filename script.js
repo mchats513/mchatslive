@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', function() {
         requestTick();
+        updateParallaxHero();
         ticking = false;
     });
 
@@ -280,30 +281,120 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     });
 
-    // Animate elements on scroll
+    // Enhanced animation system
     function animateOnScroll() {
-        const elements = document.querySelectorAll('.service-card, .skill-item, .contact-item');
+        const elements = document.querySelectorAll('.service-card, .skill-item, .contact-item, .experience-item, .playground-card, .about-description');
         
-        elements.forEach(element => {
+        elements.forEach((element, index) => {
             const elementTop = element.getBoundingClientRect().top;
             const elementVisible = 150;
             
             if (elementTop < window.innerHeight - elementVisible) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
+                // Add staggered animation delay
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                    element.classList.add('animated');
+                }, index * 100);
+            }
+        });
+
+        // Animate section titles
+        const sectionTitles = document.querySelectorAll('.section-title');
+        sectionTitles.forEach(title => {
+            const rect = title.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100 && !title.classList.contains('animated')) {
+                title.classList.add('animated');
+            }
+        });
+
+        // Animate hero stats with counting effect
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const rect = stat.getBoundingClientRect();
+            if (rect.top < window.innerHeight && !stat.classList.contains('counted')) {
+                stat.classList.add('counted');
+                animateCounter(stat);
             }
         });
     }
 
+    // Counter animation for stats
+    function animateCounter(element) {
+        const text = element.textContent;
+        const isNumber = !isNaN(text.replace('+', ''));
+        
+        if (isNumber) {
+            const finalValue = parseInt(text.replace('+', ''));
+            const hasPlus = text.includes('+');
+            let currentValue = 0;
+            const increment = Math.ceil(finalValue / 30);
+            
+            const counter = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    currentValue = finalValue;
+                    clearInterval(counter);
+                }
+                element.textContent = currentValue + (hasPlus ? '+' : '');
+            }, 50);
+        } else {
+            // For non-numeric values like "Lead", add a typewriter effect
+            const originalText = text;
+            element.textContent = '';
+            let i = 0;
+            
+            const typeWriter = setInterval(() => {
+                element.textContent += originalText.charAt(i);
+                i++;
+                if (i >= originalText.length) {
+                    clearInterval(typeWriter);
+                }
+            }, 100);
+        }
+    }
+
     // Initialize elements for animation
     function initializeAnimations() {
-        const elements = document.querySelectorAll('.service-card, .skill-item, .contact-item');
+        const elements = document.querySelectorAll('.service-card, .skill-item, .contact-item, .experience-item, .playground-card, .about-description');
         
-        elements.forEach(element => {
+        elements.forEach((element, index) => {
             element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = `opacity 0.8s ease ${index * 0.1}s, transform 0.8s ease ${index * 0.1}s`;
         });
+
+        // Add hover animations to icons
+        addIconHoverEffects();
+    }
+
+    // Add interactive hover effects to icons
+    function addIconHoverEffects() {
+        const skillIcons = document.querySelectorAll('.skill-icon');
+        const serviceIcons = document.querySelectorAll('.service-icon');
+        const playgroundIcons = document.querySelectorAll('.playground-icon');
+        
+        [...skillIcons, ...serviceIcons, ...playgroundIcons].forEach(icon => {
+            icon.addEventListener('mouseenter', () => {
+                icon.style.transform = 'scale(1.2) rotate(10deg)';
+            });
+            
+            icon.addEventListener('mouseleave', () => {
+                icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    }
+
+    // Parallax scroll effect for hero elements
+    function updateParallaxHero() {
+        const scrollTop = window.pageYOffset;
+        const heroContent = document.querySelector('.hero-content');
+        const heroImage = document.querySelector('.hero-image');
+        
+        if (heroContent && heroImage) {
+            heroContent.style.transform = `translateY(${scrollTop * 0.3}px)`;
+            heroImage.style.transform = `translateY(${scrollTop * 0.2}px)`;
+        }
     }
 
     // Initialize animations and scroll listener

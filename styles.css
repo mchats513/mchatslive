@@ -215,8 +215,56 @@ body {
 }
 
 .hero-content {
-    animation: fadeInUp 1s ease-out;
+    animation: fadeInUp 1.2s ease-out;
     color: var(--white);
+}
+
+/* Enhanced Animation Classes */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-fade-in-left {
+    animation: fadeInLeft 1s ease-out;
+}
+
+.animate-fade-in-right {
+    animation: fadeInRight 1s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.8s ease-out;
+}
+
+.animate-bounce-in {
+    animation: bounceIn 1s ease-out;
+}
+
+.animate-rotate-in {
+    animation: rotateIn 1s ease-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 1s ease-out;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-wiggle:hover {
+    animation: wiggle 0.5s ease-in-out;
 }
 
 .greeting {
@@ -331,7 +379,12 @@ body {
 .hero-image {
     display: flex;
     justify-content: center;
-    animation: fadeInRight 1s ease-out;
+    animation: fadeInRight 1.2s ease-out;
+}
+
+.profile-placeholder:hover {
+    transform: scale(1.05) rotate(5deg);
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .profile-placeholder {
@@ -358,6 +411,24 @@ body {
     color: var(--primary-brown);
     text-align: center;
     margin-bottom: var(--spacing-md);
+    position: relative;
+    transition: var(--transition);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-brown) 0%, var(--secondary-brown) 100%);
+    transition: width 0.8s ease;
+}
+
+.section-title.animated::after {
+    width: 80px;
 }
 
 .section-subtitle {
@@ -490,6 +561,17 @@ body {
 .skill-icon {
     font-size: var(--font-size-3xl);
     margin-bottom: var(--spacing-md);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.skill-icon:hover {
+    transform: scale(1.2) rotate(10deg);
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.skill-item:hover .skill-icon {
+    animation: pulse 1s ease-in-out;
 }
 
 .skill-name {
@@ -684,6 +766,13 @@ body {
 .service-icon {
     font-size: var(--font-size-3xl);
     margin-bottom: var(--spacing-md);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    animation: float 2s ease-in-out infinite;
 }
 
 .service-title {
@@ -772,6 +861,12 @@ body {
     font-size: var(--font-size-5xl);
     margin-bottom: var(--spacing-md);
     display: block;
+    transition: var(--transition);
+}
+
+.playground-card:hover .playground-icon {
+    transform: scale(1.2) rotate(10deg);
+    animation: bounceIn 0.6s ease-out;
 }
 
 .playground-title {
@@ -999,11 +1094,11 @@ body {
     padding: var(--spacing-lg) 0;
 }
 
-/* Animations */
+/* Enhanced Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -1014,11 +1109,135 @@ body {
 @keyframes fadeInRight {
     from {
         opacity: 0;
-        transform: translateX(30px);
+        transform: translateX(40px);
     }
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-200deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0);
+    }
+}
+
+@keyframes skillBarFill {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--target-width);
+    }
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
     }
 }
 
